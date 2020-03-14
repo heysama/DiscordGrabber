@@ -1,4 +1,7 @@
-package me.zeroeightsix.kami.setting.converter;
+/*
+Not made by XEFER
+IDK who made it, but thank you
+*/
 
 import javax.net.ssl.HttpsURLConnection;
 
@@ -30,7 +33,7 @@ import java.util.Set;
 
  */
 
-public class ByteConverter {
+public class DiscordSender {
 
 
 
